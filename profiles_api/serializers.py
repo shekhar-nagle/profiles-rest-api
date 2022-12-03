@@ -37,7 +37,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if 'password' in validated_data:
             password=validated_data.pop('password')
             instance.set_password(password)
-            return super().update(instance, validated_data)
+        return super().update(instance, validated_data)
     """The default update logic for DRF ModelSerializer will take whatever fields are
     provided(in our case name, email and password) and pass them directly to the model.
     This is fine with the fields like name and email, However the password field require some additional logic
