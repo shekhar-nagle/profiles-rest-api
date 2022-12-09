@@ -6,6 +6,8 @@ from rest_framework import viewsets
 from profiles_api import models
 from rest_framework.authentication import TokenAuthentication
 from profiles_api import permissions
+from rest_framework.settings import api_settings
+from rest_framework.authtoken.views import ObtainAuthToken
 class HelloApiVIew(APIView):
     serializer_class = serializers.HelloSerializers
 
@@ -92,3 +94,17 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes=(permissions.UpdateOwnProfile,)
     """To make it iterable we need tuple thats why comma else you will getting
     'type' object is not iterable error"""
+class UserLoginApiViews(ObtainAuthToken):
+    """Handle creating auth token """
+    renderer_classes=api_settings.DEFAULT_RENDERER_CLASSES
+    """To make ObtainAuthToken to be enable in browsable admin site
+    and to make it visible in API site we have tp override it by using
+    renderer_classes"""
+class UserProfileFeedViewSet(viewsets.ModelViewSet):
+    """Handle create ,read, and update profile feed items"""
+    authentication_classes=(TokenAuthentication,)
+    serializer_class=serializers.ProfileFeedSerializer
+    queryset=models.ProfileFeedItems.objects.all()
+    def perform_create(self,serializer):
+        """sets the user profile to the logged in user"""
+        serializer.save(user_profile=self.request.user)

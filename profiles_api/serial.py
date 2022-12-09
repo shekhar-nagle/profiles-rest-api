@@ -1,4 +1,3 @@
-#Creating serializer
 from rest_framework import serializers
 from profiles_api import models
 class HelloSerializers(serializers.Serializer):
@@ -16,9 +15,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = models.UserProfile
         fields = ('id', 'email','name', 'password')
         extra_kwargs = {
-        'password' : { 'write_only' : True,
-        'style' :{'input_type' :'password'}
-            }
+        'password' : { 'write_only' : True, 'style' :{'input_type' :'password'}}
         }
 
     """Now override the create function of DRF so as to save password in hash type not in simple readable format"""
@@ -51,8 +48,3 @@ class UserProfileSerializer(serializers.ModelSerializer):
     which is save the password in Hash type.
     Once that done we use super().update() to pass the values to the existing DRF update method,
     to handle the remaining fields"""
-class ProfileFeedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=models.ProfileFeedItems
-        fields=('id', 'user_profile','status_text','created_on')
-        extra_kwargs = {'user_profile':{'read_only':True}}
